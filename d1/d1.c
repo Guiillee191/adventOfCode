@@ -6,13 +6,21 @@
 
 #define printF(x) write(1, x, strlen(x))
 
+int mode_1(int **depth, int size);
+
+int mode_2(int **depth, int size);
+
 int main(int argc, char *argv[]){
 	
 	int *depth=malloc(sizeof(int));
 	int n=0;
 	
-	if(argc!=2){
+	if(argc!=3){
 		printF("Num parametros incorrectos\n");
+		exit(2);
+	}
+	if(atoi(argv[2])==0){
+		printF("Segundo parametro incorrecto\n");
 		exit(2);
 	}
 	
@@ -44,15 +52,36 @@ int main(int argc, char *argv[]){
 		}
 		close(fd);
 	}
+	switch(atoi(argv[2])){
+		case 1:
+			mode_1(&depth, n);
+			break;
+		case 2:
+			mode_2(&depth, n);
+			break;
+	}
 	
+
+	exit(1);
+}
+
+int mode_1(int **depth, int size){
 	int c=0;
-	for(int i=1;i<n;i++){
-		//printf("%d\n", depth[i]);
-		if(depth[i-1]<depth[i]){
+	for(int i=1;i<size;i++){
+		if((*depth)[i-1]<(*depth)[i]){
 			c++;
 		}
 	}
 	printf("%d\n", c);
-
-//exit(1);
 }
+
+int mode_2(int **depth, int size){
+	int c=0;
+	for(int i=3;i<size;i++){
+		if(((*depth)[i-3]+(*depth)[i-2]+(*depth)[i-1])<((*depth)[i-2]+(*depth)[i-1]+(*depth)[i])){
+			c++;
+		}
+	}
+	printf("%d\n", c);
+}
+
