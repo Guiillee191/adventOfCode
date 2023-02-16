@@ -1,0 +1,53 @@
+import collections.abc
+
+#[  14848514, 8504156, [ 29116, 2557, 62596, [ 584 ] ], [ 4060174, 8033020, 5626152, 7214296 ] ]
+
+def parse(lines):
+	deep=[]
+	for line in lines:
+		split=line.split()
+		if split[0]=='$':
+			if split[1]=='cd':
+				if split[2]=='..':
+					deep[-2].append(deep[-1])
+					deep.pop()
+				else:
+					deep.append([])
+			#print(deep)
+			#elif split[1]=='ls':	
+		else:
+			if split[0]!='dir':
+				deep[-1].append(int(split[0]))
+				#print(deep)
+	deep[-2].append(deep[-1])
+	deep.pop()
+	print(deep[0])
+	return deep[0]
+	
+
+def compute(structure, k):
+	currentFolder=0
+	ret=0
+	if not isinstance(structure, collections.abc.Sequence):
+		return structure
+	print('folder: ', structure)
+	
+
+	for f in structure:	
+		currentFolder+=compute(f, k+1)
+	
+	print('currentFolder: ', currentFolder)	
+	if not currentFolder>100000:
+		ret+=currentFolder
+	elif not currentFolder>100000 and k!=0:
+		return currentFolder
+	print('return: ', ret)
+	return ret
+	
+	
+
+file1=open('../inputs/test')
+lines=file1.readlines()
+structure=parse(lines)
+compute(structure, 0)
+file1.close()
